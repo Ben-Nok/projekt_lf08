@@ -1,6 +1,7 @@
 ##### 1.1 Verbindung zur Datenbank herstellen #####
 
 import mariadb
+from db.db_connector import DbConnector
 
 # Connect to the MySQL database
 try:
