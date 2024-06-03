@@ -10,6 +10,7 @@ import mariadb
 # Ausgabe: gibt succesfull oder fail als print-Ausgabe zurück
 def testConnection(dbc):      #dbc steht für die Datenbankverbindung die überprüft werden soll
   # definieren sie hier die Tests und Ausgaben
+  test = test
 
 # Aufruf der Methode zum Testen der Datenbankverbindung
 testConnection(db)    
