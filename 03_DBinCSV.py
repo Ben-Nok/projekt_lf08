@@ -3,11 +3,11 @@ from db.db_connector import DbConnector
 
 # Connect to the MySQL database 
 # - definiere hier die Verbindung zur Datenbank
-db=DbConnector().db_connect()
-cursor = db.cursor()
+cursor=DbConnector().db_connect().cursor()
 
 # definiere hier die SQl-Anweisung
 sql_Anweisung= "SELECT * FROM artikel"
+sql_Anweisung2 = "SELECT * FROM personal"
 csv_file_path = "./csv/artikel.csv"
 
 
@@ -22,9 +22,9 @@ def testprint(sql):
 
         for columns in cursor.description: #get column names
             column_names.append(columns[0])
-
-        result.append(column_names) #get row contents
-        for row in rows:
+        result.append(column_names)
+        
+        for row in rows: #get row contents
             result.append(row)
 
         os.makedirs(os.path.dirname(csv_file_path), exist_ok=True) #create directory for csv files
@@ -37,7 +37,8 @@ def testprint(sql):
     except mariadb.Error as e:
         print(f"fail: {e}")
     finally:
-        db.close()
+        cursor.close()
 
 
 testprint(sql_Anweisung)
+testprint(sql_Anweisung2)
