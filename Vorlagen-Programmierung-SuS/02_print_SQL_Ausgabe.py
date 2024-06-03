@@ -1,4 +1,6 @@
 import mariadb
+import csv
+from db.db_connector import DbConnector
 
 # Connect to the MySQL database 
 # - definiere hier die Verbindung zur Datenbank
