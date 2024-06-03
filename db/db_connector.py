@@ -4,7 +4,9 @@ from db import db_config
 class DbConnector():
 
     def db_connect(self):
+        #db connection as class instance
         try:
+            #create and return connection
             conn = mariadb.connect(
                 user = db_config.user,
                 password = db_config.password,
