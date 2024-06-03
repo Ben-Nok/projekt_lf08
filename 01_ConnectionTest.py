@@ -1,14 +1,11 @@
-##### 1.1 Verbindung zur Datenbank herstellen #####
+##### Verbindung zur Datenbank herstellen #####
 
 import mariadb
+from db.db_connector import DbConnector
 
 # Connect to the MySQL database
 try:
-    db = mariadb.connect(
-        user="hems-lf8-03",
-        password="Stp563FqwyZ0",
-        database="LF08_DB"
-    )
+    db = DbConnector().db_connect()
     print("Verbindung zur Datenbank erfolgreich hergestellt.")
 except mariadb.Error as e:
     print(f"Fehler bei der Verbindung zur Datenbank: {e}")
@@ -24,12 +21,11 @@ def testConnection(dbc):  # dbc steht für die Datenbankverbindung die überprü
     except mariadb.Error as e:
         print(f"fail: {e}")
 
-
-        # 1.2 Methode um alle Mitarbeiter aus der Datenbank auszugeben
+# 1.2 Methode um alle Mitarbeiter aus der Datenbank auszugeben
 def printAllEmployees(dbc):
     try:
         cursor = dbc.cursor()
-        cursor.execute("SELECT * FROM mitarbeiter")  
+        cursor.execute("SELECT * FROM personal")  
         rows = cursor.fetchall()
         
         if rows:
