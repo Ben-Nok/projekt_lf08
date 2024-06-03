@@ -21,5 +21,25 @@ def testConnection(dbc):  # dbc steht für die Datenbankverbindung die überprü
     except mariadb.Error as e:
         print(f"fail: {e}")
 
+# 1.2 Methode um alle Mitarbeiter aus der Datenbank auszugeben
+def printAllEmployees(dbc):
+    try:
+        cursor = dbc.cursor()
+        cursor.execute("SELECT * FROM personal")  
+        rows = cursor.fetchall()
+        
+        if rows:
+            for row in rows:
+                print(row)
+        else:
+            print("Keine Mitarbeiter gefunden.")
+        
+        cursor.close()
+    except mariadb.Error as e:
+        print(f"Fehler beim Abrufen der Mitarbeiter: {e}")
+
 # Aufruf der Methode zum Testen der Datenbankverbindung
 testConnection(db)
+
+# Aufruf der Methode um alle Mitarbeiter auszugeben
+printAllEmployees(db)
