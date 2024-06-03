@@ -4,7 +4,7 @@ from db.db_connector import DbConnector
 # Connect to the MySQL database 
 # - definiere hier die Verbindung zur Datenbank
 db=DbConnector().db_connect()
-curser = db.cursor()
+cursor = db.cursor()
 
 # definiere hier die SQl-Anweisung
 sql_Anweisung= "SELECT * FROM artikel"
@@ -14,18 +14,17 @@ csv_file_path = "./csv/artikel.csv"
 # gibt nach erfolgreicher Verbindung mit der Datenbank, die Sql-Abfrage zurück
 def testprint(sql):
     try:
-        curser.execute(sql)
-        rows = curser.fetchall()
+        cursor.execute(sql)
+        rows = cursor.fetchall()
 
         result = list()
         column_names = list()
 
-        for columns in curser.description:
+        for columns in cursor.description:
             column_names.append(columns[0])
 
         result.append(column_names)
         for row in rows:
-            print(row)
             result.append(row)
 
         os.makedirs(os.path.dirname(csv_file_path), exist_ok=True)
