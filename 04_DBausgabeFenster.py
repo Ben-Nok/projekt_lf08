@@ -63,9 +63,8 @@ def darstellung_tabelle(columns, rows):
 # usae example
 table = input("What table do you want to see? ")
 result = read_from_database(table)
-while result == False:
+while result == False: #if read_from_database returns false ask for retry
     table = input("Please try again: ")
     result = read_from_database(table)
-
 
 darstellung_tabelle(columns=result[0], rows=result[1])
