@@ -1,9 +1,7 @@
 
-from sre_constants import SUCCESS
 import tkinter as tk
 from tkinter import ttk
 import mariadb
-from sqlalchemy import false
 from db.db_connector import DbConnector
 
 #Daten auslesen 
