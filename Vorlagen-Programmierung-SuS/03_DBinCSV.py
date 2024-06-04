@@ -2,12 +2,12 @@
 
 ### BIBs ###
 import mysql.connector
-import csv      # 
+import csv
 
 # MySQL Verbindung zur DB herstellen
-db 
+#db 
 
-tabelle_to_csv(tabellec, dbs):
+#tabelle_to_csv(tabellec, dbs):
     
 
     
@@ -15,6 +15,6 @@ tabelle_to_csv(tabellec, dbs):
 
 
 
-tabelle_to_csv(tabelle, db)
+#tabelle_to_csv(tabelle, db)
 
 
