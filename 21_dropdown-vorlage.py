@@ -36,10 +36,12 @@ def create_dropdown_login():
     passw_entry.grid(row=1, column=1, sticky="w")
     login_button.grid(row=2, column=1, sticky="w")
     status_label.grid(row=3, column=1, sticky="w")
+
+    root.bind('<Return>', lambda event: submit()) #bind submit to return key
   
     root.mainloop() #Execute tkinter 
-    #submit password
 
+#submit password
 def submit():
     department = department_var.get()
     password = passw_var.get()
