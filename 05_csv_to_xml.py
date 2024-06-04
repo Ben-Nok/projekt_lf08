@@ -13,11 +13,10 @@ def convert_csv_to_xml(csv_filepath, xml_filepath):
             for h, val in zip(headers, row): #geht durch jedes Element des CSV-Datei
                 ET.SubElement(record, h).text = val 
     
-    os.makedirs(os.path.dirname("./xml/"), exist_ok=True) #create xml directory
-    
     reparsed = minidom.parseString(ET.tostring(root, 'utf-8')) #parse string to a DOM
     xml_content = reparsed.toprettyxml(indent="  ")#format parsed string to a readable xml format
     
+    os.makedirs(os.path.dirname("./xml/"), exist_ok=True) #create xml directory
     with open(xml_filepath, "w") as file: #write file to xml directory
         file.write(xml_content)
 
