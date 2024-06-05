@@ -1,7 +1,6 @@
 import tkinter as tk
 import mariadb
 from db.db_connector import DbConnector
-from scripts.connectionTest import testConnection
 from scripts.csv_to_xml import convert_csv_to_xml
 from scripts.db_ausgabe_fenster import read_from_database
 from scripts.db_in_CSV import export_to_csv
@@ -16,17 +15,20 @@ login_successful = False
 root = tk.Tk()
 root.geometry("300x200") #Adjust window size
 
+#global tk variables
 department_var = tk.StringVar()
 passw_var = tk.StringVar()
 status_var = tk.StringVar()
 tool_var = tk.StringVar()
+table_var = tk.StringVar()
+
 
 def create_dropdown_login():
-    root.geometry("300x200") #Adjust window size
-    department_var.set("Abteilung") #initial menu text
+    root.geometry("300x300") #Adjust window size
     
     #Create Dropdown menu 
     drop_label = Label(root, text = "Abteilung: ", font = ('calibre',10,'bold'))
+    department_var.set("Abteilung") #initial menu text
     dropdown = OptionMenu(root, department_var, *mitarbeiter_options) 
 
     #Create password input
@@ -49,13 +51,12 @@ def create_dropdown_login():
 
     root.bind('<Return>', lambda event: submit()) #bind submit to return key 
 
-#submit password
+
 def submit():
+    #submit password
     department = department_var.get()
     password = passw_var.get()
     global login_successful
-
-    logged_out = login_successful
 
     #check department option
     if(department not in mitarbeiter_options):
@@ -74,21 +75,44 @@ def submit():
         status_var.set("Erfolgreich eingeloggt!")
         login_successful = True
     
-    accessable_tools(department = department_var.get(), login=login_successful)
+    if(login_successful == True):
+        show_accessable_tools()
 
     
-def accessable_tools(department, login):
-    if(login == True):
-        tool_options = get_tool_options(department)
-        tool_var.set("Bitte wählen...")
-        tool_label = Label(root, text = "Tools: ", font = ('calibre',10,'bold'))
-        tool_dropdown = OptionMenu(root, tool_var, *tool_options)
-        execute_button = Button(root, text = "Ausführen", command = execute_script)
-        
-        tool_label.grid(row=4, column=0, sticky="w")
-        tool_dropdown.grid(row=4, column=1)
-        execute_button.grid(row=5, column=1, sticky="w")
+def show_accessable_tools():
+    tool_options = get_tool_options(department_var.get())
+    tool_var.set("Bitte wählen...")
+    tool_label = Label(root, text = "Tools: ", font = ('calibre',10,'bold'))
+    tool_dropdown = OptionMenu(root, tool_var, *tool_options)
+    execute_button = Button(root, text = "Ausführen", command = execute_script)
+    
+    tool_label.grid(row=4, column=0, sticky="w")
+    tool_dropdown.grid(row=4, column=1)
+    show_select_table()
+    execute_button.grid(row=6, column=1, sticky="w")
 
+
+def show_select_table():
+    table_options = get_all_tables()
+    table_var.set("Bitte wählen...")
+    table_label = Label(root, text = "Datenbank: ", font = ('calibre',10,'bold'))
+    table_dropdown = OptionMenu(root, table_var, *table_options)
+    
+    table_label.grid(row=5, column=0, sticky="w")
+    table_dropdown.grid(row=5, column=1)
+
+
+def get_all_tables():
+    # Connect to the MySQL database
+    try:
+        dbc = DbConnector().db_connect()
+        cursor = dbc.cursor()
+        cursor.execute("SHOW TABLES")
+        tables = cursor.fetchall()
+        table_list = [table[0] for table in tables]
+        return table_list
+    except mariadb.Error as e:
+        print(f"Fehler bei der Verbindung zur Datenbank: {e}")
 
 
 def get_tool_options(department):
@@ -101,26 +125,25 @@ def get_tool_options(department):
     elif(department == "Geschäftsführung"):
         return ["print_SQL_Ausgabe", "DBinCSV", "DBausgabeFenster", "CSV_to_XML"]
     
+
 def execute_script():
-    tool = tool_var.get()
-    print(tool)
     # Connect to the MySQL database
     try:
-        db = DbConnector().db_connect()
-        print("Verbindung zur Datenbank erfolgreich hergestellt.")
+        dbc = DbConnector().db_connect()
     except mariadb.Error as e:
         print(f"Fehler bei der Verbindung zur Datenbank: {e}")
-        
-    if(tool == "print_SQL_Ausgabe"):
-        testprint(db)
-    elif(tool == "DBinCSV"):
-        export_to_csv(db)
-    elif(tool == "DBausgabeFenster"):
-        read_from_database(db)
-    elif(tool == "CSV_to_XML"):
-        convert_csv_to_xml()
+    tool = tool_var.get()
+    table = table_var.get()
 
-
+    if(table != "Bitte wählen..."):
+        if(tool == "print_SQL_Ausgabe"):
+            testprint(dbc, table)
+        elif(tool == "DBinCSV"):
+            export_to_csv(dbc, table)
+        elif(tool == "DBausgabeFenster"):
+            read_from_database(dbc, table)
+        elif(tool == "CSV_to_XML"):
+            convert_csv_to_xml()
 
 create_dropdown_login()
 root.mainloop() #Execute tkinter
