@@ -7,8 +7,13 @@ def convert_xml_to_csv(xml_filepath, csv_filepath):
     tree = ET.parse(xml_filepath)  # XML-Datei parsen
     root = tree.getroot()  # Wurzelelement des XML-Baums erhalten
 
+    data_element = root.find('Daten')
+    if data_element is None:
+        print(f"Fehler: Kein 'Daten'-Element in der Datei {xml_filepath} gefunden.")
+        return
+
     # Kopfzeilen aus dem ersten 'Daten'-Element extrahieren
-    headers = [elem.tag for elem in root.find('Daten')]
+    headers = [elem.tag for elem in data_element]
     
     with open(csv_filepath, 'w', newline='') as csv_file:  # CSV-Datei im Schreibmodus öffnen
         csv_writer = csv.writer(csv_file)
