@@ -1,3 +1,9 @@
+import sys
+import os
+
+# Add the parent directory to the sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import mariadb, csv, os
 from db.db_connector import DbConnector
 
@@ -12,7 +18,7 @@ csv_file_path = "./csv/"
 
 
 # gibt nach erfolgreicher Verbindung mit der Datenbank, die Sql-Abfrage zurück
-def testprint(table):
+def export_to_csv(table):
     try:
         sql = f"SELECT * FROM {table}"
         result = list()
@@ -41,7 +47,7 @@ def testprint(table):
 
 # usae example
 table = input("Which table to you want to export? ")
-result = testprint(table)
+result = export_to_csv(table)
 while result == False: #if read_from_database returns false ask for retry
     table = input("Please try again: ")
-    result = testprint(table)
+    result = export_to_csv(table)
