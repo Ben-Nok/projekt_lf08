@@ -31,8 +31,10 @@ def printAllEmployees(dbc):
         if rows:
             for row in rows:
                 print(row)
+                cursor.close()
         else:
             print("Keine Mitarbeiter gefunden.")
+            cursor.close()
         
         cursor.close()
     except mariadb.Error as e:
