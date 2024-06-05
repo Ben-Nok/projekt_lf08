@@ -3,9 +3,7 @@ import os
 import csv
 import xml.etree.ElementTree as ET
 
-def convert_xml_to_csv(xml_filepath, csv_filepath):
-    print(xml_filepath)
-    print(csv_filepath)
+def convert_file(xml_filepath, csv_filepath):
     tree = ET.parse(xml_filepath)  # XML-Datei parsen
     root = tree.getroot()  # Wurzelelement des XML-Baums erhalten
 
@@ -25,11 +23,13 @@ def convert_xml_to_csv(xml_filepath, csv_filepath):
             row = [record.find(h).text if record.find(h) is not None else '' for h in headers]
             csv_writer.writerow(row)  # Jede Zeile in die CSV-Datei schreiben
 
-# Alle XML-Dateien im Verzeichnis in CSV-Dateien konvertieren
-directory = './exports/xml/'
-os.makedirs(os.path.dirname("./exports/xml_converted_csv/"), exist_ok=True) #create directory
-for filename in os.listdir(directory):
-    fullPath = os.path.join(directory, filename)
-    base, ext = os.path.splitext(filename)
-    if os.path.isfile(fullPath) and ext.lower() == '.xml':
-        convert_xml_to_csv(fullPath, f"./exports/xml_converted_csv/{base}.csv")
+    print(f"{xml_filepath} erfolgreich zu {csv_filepath} konvertiert")
+def convert_xml_to_csv():
+    # Alle XML-Dateien im Verzeichnis in CSV-Dateien konvertieren
+    directory = './exports/xml/'
+    os.makedirs(os.path.dirname("./exports/xml_converted_csv/"), exist_ok=True) #create directory
+    for filename in os.listdir(directory):
+        fullPath = os.path.join(directory, filename)
+        base, ext = os.path.splitext(filename)
+        if os.path.isfile(fullPath) and ext.lower() == '.xml':
+            convert_file(fullPath, f"./exports/xml_converted_csv/{base}.csv")

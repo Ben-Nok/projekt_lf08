@@ -14,7 +14,7 @@ cursor=DbConnector().db_connect().cursor()
 # definiere hier die SQl-Anweisung
 sql_Anweisung= "SELECT * FROM artikel"
 sql_Anweisung2 = "SELECT * FROM personal"
-csv_file_path = "./csv/"
+csv_file_path = "./exports/csv/"
 
 
 # gibt nach erfolgreicher Verbindung mit der Datenbank, die Sql-Abfrage zurück

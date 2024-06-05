@@ -10,7 +10,7 @@ import mariadb
 from db.db_connector import DbConnector
 
 #Daten auslesen 
-def read_from_database(dbc, table):
+def read_from_database(dbc: mariadb.Connection, table: str):
     try:
         cursor = dbc.cursor()
         cursor.execute(f"SELECT * FROM {table}")  

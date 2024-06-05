@@ -10,7 +10,7 @@ import mariadb
 
 # Die Methode prüft ob eine erfolgreiche Verbindung zur Datenbank hergestellt werden kann.
 # Ausgabe: gibt "successful" oder "fail" als print-Ausgabe zurück
-def testConnection(dbc):  # dbc steht für die Datenbankverbindung die überprüft werden soll
+def testConnection(dbc: mariadb.Connection):  # dbc steht für die Datenbankverbindung die überprüft werden soll
     try:
         cursor = dbc.cursor()
         cursor.execute("SELECT 1")
@@ -20,7 +20,7 @@ def testConnection(dbc):  # dbc steht für die Datenbankverbindung die überprü
         print(f"fail: {e}")
 
 # 1.2 Methode um alle Mitarbeiter aus der Datenbank auszugeben
-def printAllEmployees(dbc):
+def printAllEmployees(dbc: mariadb.Connection):
     try:
         cursor = dbc.cursor()
         cursor.execute("SELECT * FROM personal")  

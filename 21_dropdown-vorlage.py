@@ -5,6 +5,7 @@ from scripts.csv_to_xml import convert_csv_to_xml
 from scripts.db_ausgabe_fenster import read_from_database
 from scripts.db_in_CSV import export_to_csv
 from scripts.print_SQL_Ausgabe import testprint
+from scripts.xml_to_csv import convert_xml_to_csv
 from tkinter import ttk, StringVar, Label, Button, Entry, OptionMenu #Grafik-Bib
 import subprocess # Andere Pythonprgramme ausführen
 
@@ -121,9 +122,9 @@ def get_tool_options(department):
     elif(department == "Verwaltung"):
         return ["print_SQL_Ausgabe", "DBinCSV", "DBausgabeFenster"]
     elif(department == "Marketing"):
-        return ["print_SQL_Ausgabe", "DBausgabeFenster", "CSV_to_XML"]
+        return ["print_SQL_Ausgabe", "DBausgabeFenster", "CSV_to_XML", "XML_to_CSV"]
     elif(department == "Geschäftsführung"):
-        return ["print_SQL_Ausgabe", "DBinCSV", "DBausgabeFenster", "CSV_to_XML"]
+        return ["print_SQL_Ausgabe", "DBinCSV", "DBausgabeFenster", "CSV_to_XML", "XML_to_CSV"]
     
 
 def execute_script():
@@ -135,7 +136,7 @@ def execute_script():
     tool = tool_var.get()
     table = table_var.get()
 
-    if(table != "Bitte wählen..."):
+    if(table != "Bitte wählen..." or tool == "XML_to_CSV" or tool == "CSV_to_XML"):
         if(tool == "print_SQL_Ausgabe"):
             testprint(dbc, table)
         elif(tool == "DBinCSV"):
@@ -144,6 +145,9 @@ def execute_script():
             read_from_database(dbc, table)
         elif(tool == "CSV_to_XML"):
             convert_csv_to_xml()
+        elif(tool == "XML_to_CSV"):
+            convert_xml_to_csv()
+            
 
 create_dropdown_login()
 root.mainloop() #Execute tkinter

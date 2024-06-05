@@ -22,16 +22,17 @@ def convert_file(csv_filepath, xml_filepath):
     reparsed = minidom.parseString(ET.tostring(root, 'utf-8')) #parse string to a DOM
     xml_content = reparsed.toprettyxml(indent="  ")#format parsed string to a readable xml format
     
-    os.makedirs(os.path.dirname("./xml/"), exist_ok=True) #create xml directory
+    os.makedirs(os.path.dirname("./exports/xml/"), exist_ok=True) #create xml directory
     with open(xml_filepath, "w") as file: #write file to xml directory
         file.write(xml_content)
+    print(f"{csv_filepath} erfolgreich zu {xml_filepath} konvertiert")
 
 
 def convert_csv_to_xml():
     #convert all files in the csv directory to xml files
-    direcotry = './csv/'
+    direcotry = './exports/csv/'
     for filename in os.listdir(direcotry):
         fullPath = os.path.join(direcotry, filename)
         base, ext = os.path.splitext(filename)
         if os.path.isfile(fullPath):
-            convert_file(fullPath, f"./xml/{base}.xml")
+            convert_file(fullPath, f"./exports/xml/{base}.xml")

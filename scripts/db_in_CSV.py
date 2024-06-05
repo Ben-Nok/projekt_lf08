@@ -10,20 +10,21 @@ from db.db_connector import DbConnector
 # definiere hier die SQl-Anweisung
 sql_Anweisung= "SELECT * FROM artikel"
 sql_Anweisung2 = "SELECT * FROM personal"
-csv_file_path = "./csv/"
+csv_file_path = "./exports/csv/"
 
 
 # gibt nach erfolgreicher Verbindung mit der Datenbank, die Sql-Abfrage zurück
-def export_to_csv(dbc, table):
+def export_to_csv(dbc: mariadb.Connection, table: str):
     try:
+        cursor = dbc.cursor()
         sql = f"SELECT * FROM {table}"
         result = list()
         column_names = list()
 
-        dbc.execute(sql) #execute sql-query and get result
-        rows = dbc.fetchall()
+        cursor.execute(sql) #execute sql-query and get result
+        rows = cursor.fetchall()
 
-        for columns in dbc.description: #get column names
+        for columns in cursor.description: #get column names
             column_names.append(columns[0])
         result.append(column_names)
         
@@ -36,6 +37,7 @@ def export_to_csv(dbc, table):
             csvwriter = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             for row in result:
                 csvwriter.writerow(row)
+        print(f"{table} erfolgreich zu {csv_file_path}" + f"{table}" + ".csv exportiert")
 
     except mariadb.Error as e:
         print(f"fail: {e}")
