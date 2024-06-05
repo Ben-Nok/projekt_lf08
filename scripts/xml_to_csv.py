@@ -24,6 +24,7 @@ def convert_file(xml_filepath, csv_filepath):
             csv_writer.writerow(row)  # Jede Zeile in die CSV-Datei schreiben
 
     print(f"{xml_filepath} erfolgreich zu {csv_filepath} konvertiert")
+    
 def convert_xml_to_csv():
     # Alle XML-Dateien im Verzeichnis in CSV-Dateien konvertieren
     directory = './exports/xml/'

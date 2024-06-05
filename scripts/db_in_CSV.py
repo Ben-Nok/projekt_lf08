@@ -8,8 +8,6 @@ import mariadb, csv, os
 from db.db_connector import DbConnector
 
 # definiere hier die SQl-Anweisung
-sql_Anweisung= "SELECT * FROM artikel"
-sql_Anweisung2 = "SELECT * FROM personal"
 csv_file_path = "./exports/csv/"
 
 
