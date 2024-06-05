@@ -8,10 +8,10 @@ import mariadb
 from db.db_connector import DbConnector
 
 # gibt nach erfolgreicher Verbindung mit der Datenbank, die Sql-Abfrage zurück
-def testprint(dbc, query):
+def testprint(dbc, table):
     try:
         cursor = dbc.cursor()
-        cursor.execute(f"SELECT * FROM {query}")  
+        cursor.execute(f"SELECT * FROM {table}")  
         rows = cursor.fetchall()
         
         if rows:

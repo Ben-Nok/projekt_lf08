@@ -10,13 +10,16 @@ from tkinter import ttk, StringVar, Label, Button, Entry, OptionMenu #Grafik-Bib
 import subprocess # Andere Pythonprgramme ausführen
 
 mitarbeiter_options=["Lager", "Verwaltung", "Marketing", "Geschäftsführung"] # Nutzer Gruppenspezifisch für Login
+login_successful = False
 
+#initialize tk and set tk vars
 root = tk.Tk()
 root.geometry("300x200") #Adjust window size
 
 department_var = tk.StringVar()
 passw_var = tk.StringVar()
 status_var = tk.StringVar()
+tool_var = tk.StringVar()
 
 def create_dropdown_login():
     root.geometry("300x200") #Adjust window size
@@ -33,6 +36,7 @@ def create_dropdown_login():
     #Create button, it will change label text 
     login_button = Button(root, text = "Login", command = submit)
 
+    #login feedback
     status_label = Label(root, textvariable=status_var, font = ('calibre',10,'normal'), justify="left", wraplength=170)
 
     #create grid layout
@@ -49,22 +53,74 @@ def create_dropdown_login():
 def submit():
     department = department_var.get()
     password = passw_var.get()
+    global login_successful
 
+    logged_out = login_successful
+
+    #check department option
     if(department not in mitarbeiter_options):
         status_var.set("Bitte wählen sie eine Abteilung!")
-    elif(password == ""):
+        login_successful = False
+        return
+
+    #validate password
+    if(password == ""):
         status_var.set("Bitte geben sie ein Password ein!")
+        login_successful = False
     elif(password != department):
         status_var.set("Falsches Passwort!")
+        login_successful = False
     elif(password == department):
         status_var.set("Erfolgreich eingeloggt!")
+        login_successful = True
+    
+    accessable_tools(department = department_var.get(), login=login_successful)
 
-# Connect to the MySQL database
-try:
-    db = DbConnector().db_connect()
-    print("Verbindung zur Datenbank erfolgreich hergestellt.")
-except mariadb.Error as e:
-    print(f"Fehler bei der Verbindung zur Datenbank: {e}")
+    
+def accessable_tools(department, login):
+    if(login == True):
+        tool_options = get_tool_options(department)
+        tool_var.set("Bitte wählen...")
+        tool_label = Label(root, text = "Tools: ", font = ('calibre',10,'bold'))
+        tool_dropdown = OptionMenu(root, tool_var, *tool_options)
+        execute_button = Button(root, text = "Ausführen", command = execute_script)
+        
+        tool_label.grid(row=4, column=0, sticky="w")
+        tool_dropdown.grid(row=4, column=1)
+        execute_button.grid(row=5, column=1, sticky="w")
+
+
+
+def get_tool_options(department):
+    if(department == "Lager"):
+        return ["print_SQL_Ausgabe"]
+    elif(department == "Verwaltung"):
+        return ["print_SQL_Ausgabe", "DBinCSV", "DBausgabeFenster"]
+    elif(department == "Marketing"):
+        return ["print_SQL_Ausgabe", "DBausgabeFenster", "CSV_to_XML"]
+    elif(department == "Geschäftsführung"):
+        return ["print_SQL_Ausgabe", "DBinCSV", "DBausgabeFenster", "CSV_to_XML"]
+    
+def execute_script():
+    tool = tool_var.get()
+    print(tool)
+    # Connect to the MySQL database
+    try:
+        db = DbConnector().db_connect()
+        print("Verbindung zur Datenbank erfolgreich hergestellt.")
+    except mariadb.Error as e:
+        print(f"Fehler bei der Verbindung zur Datenbank: {e}")
+        
+    if(tool == "print_SQL_Ausgabe"):
+        testprint(db)
+    elif(tool == "DBinCSV"):
+        export_to_csv(db)
+    elif(tool == "DBausgabeFenster"):
+        read_from_database(db)
+    elif(tool == "CSV_to_XML"):
+        convert_csv_to_xml()
+
+
 
 create_dropdown_login()
 root.mainloop() #Execute tkinter
