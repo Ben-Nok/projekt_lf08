@@ -77,46 +77,54 @@ def submit():
         login_successful = True
     
     if(login_successful == True):
-        show_accessable_tools()
+        show_accessable_tools() #draw tools, database, and execute ui-elements
 
     
 def show_accessable_tools():
-    tool_options = get_tool_options(department_var.get())
+    tool_options = get_tool_options(department_var.get()) #get tool options
+
+    #initialize tool select, label and button
     tool_var.set("Bitte wählen...")
     tool_label = Label(root, text = "Tools: ", font = ('calibre',10,'bold'))
     tool_dropdown = OptionMenu(root, tool_var, *tool_options)
-    execute_button = Button(root, text = "Ausführen", command = execute_script)
+    execute_button = Button(root, text = "Ausführen", command = execute_script) #button calls the execute_script() function
     
+    #add elements to grid
     tool_label.grid(row=4, column=0, sticky="w")
     tool_dropdown.grid(row=4, column=1)
-    show_select_table()
+    show_select_table()#add select table dropdown
     execute_button.grid(row=6, column=1, sticky="w")
 
 
 def show_select_table():
-    table_options = get_all_tables()
+    table_options = get_all_tables()#get all tables as table options
+
+    #initialize table select and label
     table_var.set("Bitte wählen...")
     table_label = Label(root, text = "Datenbank: ", font = ('calibre',10,'bold'))
     table_dropdown = OptionMenu(root, table_var, *table_options)
     
+    #add elements to grid
     table_label.grid(row=5, column=0, sticky="w")
     table_dropdown.grid(row=5, column=1)
 
 
 def get_all_tables():
-    # Connect to the MySQL database
     try:
+        # Connect to the MySQL database
         dbc = DbConnector().db_connect()
         cursor = dbc.cursor()
-        cursor.execute("SHOW TABLES")
+        
+        cursor.execute("SHOW TABLES")#get tables
         tables = cursor.fetchall()
-        table_list = [table[0] for table in tables]
+        table_list = [table[0] for table in tables] #create table list and return lsit with table names
         return table_list
     except mariadb.Error as e:
         print(f"Fehler bei der Verbindung zur Datenbank: {e}")
 
 
 def get_tool_options(department):
+    #based on department parameter, different scripts will be returned as options
     if(department == "Lager"):
         return ["print_SQL_Ausgabe"]
     elif(department == "Verwaltung"):
@@ -128,14 +136,18 @@ def get_tool_options(department):
     
 
 def execute_script():
-    # Connect to the MySQL database
     try:
+         #Connect to the MySQL database and create connection object
         dbc = DbConnector().db_connect()
     except mariadb.Error as e:
         print(f"Fehler bei der Verbindung zur Datenbank: {e}")
+    
+    #get selected values from the tool and table dropdown
     tool = tool_var.get()
     table = table_var.get()
 
+    #execute the scripts with the connection object and the target table
+    #the tools "XML_to_CSV" and "CSV_to_XML" dont need a table selection
     if(table != "Bitte wählen..." or tool == "XML_to_CSV" or tool == "CSV_to_XML"):
         if(tool == "print_SQL_Ausgabe"):
             testprint(dbc, table)
@@ -149,5 +161,5 @@ def execute_script():
             convert_xml_to_csv()
             
 
-create_dropdown_login()
-root.mainloop() #Execute tkinter
+create_dropdown_login() #create gui
+root.mainloop() #Execute tkinter mainloop
