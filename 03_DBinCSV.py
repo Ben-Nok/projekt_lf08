@@ -8,12 +8,13 @@ cursor=DbConnector().db_connect().cursor()
 # definiere hier die SQl-Anweisung
 sql_Anweisung= "SELECT * FROM artikel"
 sql_Anweisung2 = "SELECT * FROM personal"
-csv_file_path = "./csv/artikel.csv"
+csv_file_path = "./csv/"
 
 
 # gibt nach erfolgreicher Verbindung mit der Datenbank, die Sql-Abfrage zurück
-def testprint(sql):
+def testprint(table):
     try:
+        sql = f"SELECT * FROM {table}"
         result = list()
         column_names = list()
 
@@ -29,16 +30,18 @@ def testprint(sql):
 
         os.makedirs(os.path.dirname(csv_file_path), exist_ok=True) #create directory for csv files
         
-        with open(csv_file_path, 'w', newline='') as csvfile: #write the csv file
+        with open(csv_file_path + f"{table}" + ".csv", 'w', newline='') as csvfile: #write the csv file
             csvwriter = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             for row in result:
                 csvwriter.writerow(row)
 
     except mariadb.Error as e:
         print(f"fail: {e}")
-    finally:
-        cursor.close()
+        return False
 
-
-testprint(sql_Anweisung)
-testprint(sql_Anweisung2)
+# usae example
+table = input("Which table to you want to export? ")
+result = testprint(table)
+while result == False: #if read_from_database returns false ask for retry
+    table = input("Please try again: ")
+    result = testprint(table)

@@ -1,9 +1,7 @@
 
-from sre_constants import SUCCESS
 import tkinter as tk
 from tkinter import ttk
 import mariadb
-from sqlalchemy import false
 from db.db_connector import DbConnector
 
 #Daten auslesen 
@@ -63,11 +61,10 @@ def darstellung_tabelle(columns, rows):
 
 
 # usae example
-table = input("What table do you want to see? ")
+table = input("Which table do you want to see? ")
 result = read_from_database(table)
-while result == False:
+while result == False: #if read_from_database returns false ask for retry
     table = input("Please try again: ")
     result = read_from_database(table)
-
 
 darstellung_tabelle(columns=result[0], rows=result[1])
