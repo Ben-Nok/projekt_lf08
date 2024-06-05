@@ -1,3 +1,9 @@
+import sys
+import os
+
+# Add the parent directory to the sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import csv, os
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as minidom
@@ -19,12 +25,3 @@ def convert_csv_to_xml(csv_filepath, xml_filepath):
     os.makedirs(os.path.dirname("./xml/"), exist_ok=True) #create xml directory
     with open(xml_filepath, "w") as file: #write file to xml directory
         file.write(xml_content)
-
-
-#convert all files in the csv directory to xml files
-direcotry = './csv/'
-for filename in os.listdir(direcotry):
-    fullPath = os.path.join(direcotry, filename)
-    base, ext = os.path.splitext(filename)
-    if os.path.isfile(fullPath):
-        convert_csv_to_xml(fullPath, f"./xml/{base}.xml")
