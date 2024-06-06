@@ -1,20 +1,17 @@
 import mariadb
-from db import db_config
+from db.db_config import get_db_config
 
 class DbConnector():
+
+    def __init__(self) -> None:
+        self.config = get_db_config()
+        pass
 
     def db_connect(self):
         #db connection as class instance
         try:
             #create and return connection
-            conn = mariadb.connect(
-                user = db_config.user,
-                password = db_config.password,
-                host = db_config.host,
-                port = db_config.port,
-                database = db_config.database
-            )
-            return conn
+            return mariadb.connect(**self.config)
         except mariadb.Error as e:
             print(f"Error connecting to MariaDB: {e}")
             return None
