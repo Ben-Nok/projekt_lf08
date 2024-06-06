@@ -4,7 +4,6 @@
     - csv, tkinter and xml libraries should be bundled with the latest python version
 - MariaDB Connector/Python
 
-
 ### Installation
 
 MariaDB:
@@ -21,3 +20,5 @@ The scripts require a database connection, which needs to be confgured:
 4. Additional settings can be added if needed.
 
 ## Usage
+
+There are two sets of scripts, the `terminal_scripts` can be exectued directly in the terminal, while the scripts in the `scripts` directory are used by the main script called `21_dropdown-vorlage.py`, which offers a gui to interact with. The `21_dropdown-vorlage.py` script still has some feedback in the terminal. 
